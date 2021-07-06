@@ -58,6 +58,18 @@ const constantRoutes = [
     ]
   },
   {
+    path: '/at1',
+    component: 'layout/Layout',
+    children: [
+      {
+        path: 'index',
+        component: 'views/at1/index',
+        name: 'At1',
+        meta: { title: 'at1', icon: 'documentation', affix: true }
+      }
+    ]
+  },
+  {
     path: '/guide',
     component: 'layout/Layout',
     redirect: '/guide/index',
@@ -70,7 +82,7 @@ const constantRoutes = [
       }
     ]
   }
-]
+];
 
 const asyncRoutes = [
   {
@@ -522,9 +534,9 @@ const asyncRoutes = [
   },
 
   { path: '*', redirect: '/404', hidden: true }
-]
+];
 
 module.exports = {
   constantRoutes,
   asyncRoutes
-}
+};

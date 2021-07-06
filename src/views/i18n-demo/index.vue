@@ -74,8 +74,8 @@
 </template>
 
 <script>
-import local from './local'
-const viewName = 'i18nView'
+import local from './local';
+const viewName = 'i18nView';
 
 export default {
   name: 'I18n',
@@ -104,32 +104,32 @@ export default {
       }],
       options: [],
       value: ''
-    }
+    };
   },
   computed: {
     lang: {
       get() {
-        return this.$store.state.app.language
+        return this.$store.state.app.language;
       },
       set(lang) {
-        this.$i18n.locale = lang
-        this.$store.dispatch('app/setLanguage', lang)
+        this.$i18n.locale = lang;
+        this.$store.dispatch('app/setLanguage', lang);
       }
     }
   },
   watch: {
     lang() {
-      this.setOptions()
+      this.setOptions();
     }
   },
   created() {
     if (!this.$i18n.getLocaleMessage('en')[viewName]) {
-      this.$i18n.mergeLocaleMessage('en', local.en)
-      this.$i18n.mergeLocaleMessage('zh', local.zh)
-      this.$i18n.mergeLocaleMessage('es', local.es)
-      this.$i18n.mergeLocaleMessage('ja', local.ja)
+      this.$i18n.mergeLocaleMessage('en', local.en);
+      this.$i18n.mergeLocaleMessage('zh', local.zh);
+      this.$i18n.mergeLocaleMessage('es', local.es);
+      this.$i18n.mergeLocaleMessage('ja', local.ja);
     }
-    this.setOptions() // set default select options
+    this.setOptions(); // set default select options
   },
   methods: {
     setOptions() {
@@ -146,10 +146,10 @@ export default {
           value: '3',
           label: this.$t('i18nView.three')
         }
-      ]
+      ];
     }
   }
-}
+};
 </script>
 
 <style scoped>
