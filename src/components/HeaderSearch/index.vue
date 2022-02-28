@@ -20,9 +20,9 @@
 <script>
 // fuse is a lightweight fuzzy-search module
 // make search results more in line with expectations
-import Fuse from 'fuse.js'
-import path from 'path'
-import i18n from '@/lang'
+import Fuse from 'fuse.js';
+import path from 'path';
+import i18n from '@/lang';
 
 export default {
   name: 'HeaderSearch',
@@ -33,80 +33,80 @@ export default {
       searchPool: [],
       show: false,
       fuse: undefined
-    }
+    };
   },
   computed: {
     routes() {
-      return this.$store.getters.permission_routes
+      return this.$store.getters.permission_routes;
     },
     lang() {
-      return this.$store.getters.language
+      return this.$store.getters.language;
     },
     supportPinyinSearch() {
-      return this.$store.state.settings.supportPinyinSearch
+      return this.$store.state.settings.supportPinyinSearch;
     }
   },
   watch: {
     lang() {
-      this.searchPool = this.generateRoutes(this.routes)
+      this.searchPool = this.generateRoutes(this.routes);
     },
     routes() {
-      this.searchPool = this.generateRoutes(this.routes)
+      this.searchPool = this.generateRoutes(this.routes);
     },
     searchPool(list) {
       // Support pinyin search
       if (this.lang === 'zh' && this.supportPinyinSearch) {
-        this.addPinyinField(list)
+        this.addPinyinField(list);
       }
-      this.initFuse(list)
+      this.initFuse(list);
     },
     show(value) {
       if (value) {
-        document.body.addEventListener('click', this.close)
+        document.body.addEventListener('click', this.close);
       } else {
-        document.body.removeEventListener('click', this.close)
+        document.body.removeEventListener('click', this.close);
       }
     }
   },
   mounted() {
-    this.searchPool = this.generateRoutes(this.routes)
+    this.searchPool = this.generateRoutes(this.routes);
   },
   methods: {
     async addPinyinField(list) {
-      const { default: pinyin } = await import('pinyin')
+      const { default: pinyin } = await import('pinyin');
       if (Array.isArray(list)) {
         list.forEach(element => {
-          const title = element.title
+          const title = element.title;
           if (Array.isArray(title)) {
             title.forEach(v => {
               v = pinyin(v, {
                 style: pinyin.STYLE_NORMAL
-              }).join('')
-              element.pinyinTitle = v
-            })
+              }).join('');
+              element.pinyinTitle = v;
+            });
           }
-        })
-        return list
+        });
+        return list;
       }
     },
     click() {
-      this.show = !this.show
+      this.show = !this.show;
       if (this.show) {
-        this.$refs.headerSearchSelect && this.$refs.headerSearchSelect.focus()
+        this.$refs.headerSearchSelect && this.$refs.headerSearchSelect.focus();
       }
     },
     close() {
-      this.$refs.headerSearchSelect && this.$refs.headerSearchSelect.blur()
-      this.options = []
-      this.show = false
+      this.$refs.headerSearchSelect && this.$refs.headerSearchSelect.blur();
+      this.options = [];
+      this.show = false;
     },
     change(val) {
-      this.$router.push(val.path)
-      this.search = ''
-      this.options = []
+      this.$router.push(val.path);
+      this.search = '';
+      this.options = [];
       this.$nextTick(() => {
-        this.show = false
-      })
+        this.show = false;
+      });
     },
     initFuse(list) {
       this.fuse = new Fuse(list, {
@@ -126,48 +126,48 @@ export default {
           name: 'path',
           weight: 0.3
         }]
-      })
+      });
     },
     // Filter out the routes that can be displayed in the sidebar
     // And generate the internationalized title
     generateRoutes(routes, basePath = '/', prefixTitle = []) {
-      let res = []
+      let res = [];
       for (const router of routes) {
         // skip hidden router
-        if (router.hidden) { continue }
+        if (router.hidden) { continue; }
         const data = {
           path: path.resolve(basePath, router.path),
           title: [...prefixTitle]
-        }
+        };
         if (router.meta && router.meta.title) {
           // generate internationalized title
-          const i18ntitle = i18n.t(`route.${router.meta.title}`)
-          data.title = [...data.title, i18ntitle]
+          const i18ntitle = i18n.t(`route.${router.meta.title}`);
+          data.title = [...data.title, i18ntitle];
           if (router.redirect !== 'noRedirect') {
             // only push the routes with title
             // special case: need to exclude parent router without redirect
-            res.push(data)
+            res.push(data);
           }
         }
         // recursive child routes
         if (router.children) {
-          const tempRoutes = this.generateRoutes(router.children, data.path, data.title)
+          const tempRoutes = this.generateRoutes(router.children, data.path, data.title);
           if (tempRoutes.length >= 1) {
-            res = [...res, ...tempRoutes]
+            res = [...res, ...tempRoutes];
           }
         }
       }
-      return res
+      return res;
     },
     querySearch(query) {
       if (query !== '') {
-        this.options = this.fuse.search(query)
+        this.options = this.fuse.search(query);
       } else {
-        this.options = []
+        this.options = [];
       }
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
